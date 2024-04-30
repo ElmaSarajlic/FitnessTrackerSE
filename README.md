@@ -1,1 +1,2 @@
-# FitnessTrackerSE
+# fitness-tracker
+Web Engineering Project
