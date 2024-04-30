@@ -2,6 +2,7 @@ package ba.edu.ibu.fitnesstracker.rest.dto;
 
 import ba.edu.ibu.fitnesstracker.core.model.Exercise;
 import ba.edu.ibu.fitnesstracker.core.model.enums.ExerciseGroup;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -9,6 +10,7 @@ public class ExerciseRequestDTO {
     private String name;
     private ExerciseGroup muscleGroup;
     private String description;
+    private MultipartFile image;
 
     public ExerciseRequestDTO() { }
 
@@ -48,5 +50,13 @@ public class ExerciseRequestDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
     }
 }

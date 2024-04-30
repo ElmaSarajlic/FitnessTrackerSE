@@ -12,14 +12,16 @@ public class Exercise {
     private String name;
     private ExerciseGroup muscleGroup;
     private String description;
+    private String imageUrl;
 
     public Exercise() { }
 
-    public Exercise(String id, String name, ExerciseGroup muscleGroup, String description) {
+    public Exercise(String id, String name, ExerciseGroup muscleGroup, String description, String imageUrl) {
         this.id = id;
         this.name = name;
         this.muscleGroup = muscleGroup;
         this.description = description;
+        this.imageUrl = imageUrl;
     }
 
     public String getId() {
@@ -52,5 +54,13 @@ public class Exercise {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

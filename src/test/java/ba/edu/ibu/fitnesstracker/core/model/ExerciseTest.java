@@ -7,15 +7,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ExerciseTest {
-
     @Test
     void shouldCreateNewExercise() {
         Exercise exercise = new Exercise(
              "idExample",
              "Lat pulldown",
              ExerciseGroup.LATS,
-                "Some Description"
-        );
+                "Some Description",
+                "imageUrl");
 
         assertEquals("Lat pulldown", exercise.getName());
         assertEquals(ExerciseGroup.LATS, exercise.getMuscleGroup());
@@ -27,15 +26,15 @@ public class ExerciseTest {
                 "idExample",
                 "Lat pulldown",
                 ExerciseGroup.LATS,
-                "Some Description"
-        );
+                "Some Description",
+                "imageUrl");
 
         Exercise exercise2 = new Exercise(
                 "idExample",
                 "Lat pulldown",
                 ExerciseGroup.LATS,
-                "Some Description"
-        );
+                "Some Description",
+                "imageUrl");
 
         assertThat(exercise1)
                 .usingRecursiveComparison()
@@ -48,8 +47,8 @@ public class ExerciseTest {
                 "idExample",
                 "Lat pulldown",
                 ExerciseGroup.LATS,
-                "Some Description"
-        );
+                "Some Description",
+                "imageUrl");
 
         assertThat(exercise.getName()).startsWith("L").endsWith("n").contains("do").isEqualTo("Lat pulldown").isEqualToIgnoringCase("lAt pUlldown");
     }

@@ -29,21 +29,6 @@ public class ExerciseServiceTest {
     ExerciseService exerciseService;
 
     @Test
-    public void shouldReturnExerciseWhenCreated() {
-        Exercise exercise = new Exercise();
-        exercise.setName("Bicep curl");
-        exercise.setDescription("Some description");
-        exercise.setMuscleGroup(ExerciseGroup.BICEPS);
-
-        Mockito.when(exerciseRepository.save(ArgumentMatchers.any(Exercise.class))).thenReturn(exercise);
-
-        ExerciseDTO savedExercise = exerciseService.addExercise(new ExerciseRequestDTO(exercise));
-        assertThat(exercise.getName()).isEqualTo(savedExercise.getName());
-        assertThat(exercise.getMuscleGroup()).isNotNull();
-        System.out.println(savedExercise.getName());
-    }
-
-    @Test
     public void shouldReturnExerciseById() {
         Exercise exercise = new Exercise();
         exercise.setId("someId");

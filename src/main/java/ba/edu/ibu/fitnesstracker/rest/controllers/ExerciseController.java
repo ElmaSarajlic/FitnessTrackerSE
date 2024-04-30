@@ -6,9 +6,11 @@ import ba.edu.ibu.fitnesstracker.rest.dto.ExerciseDTO;
 import ba.edu.ibu.fitnesstracker.rest.dto.ExerciseRequestDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,21 +31,52 @@ public class ExerciseController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(method = RequestMethod.POST, path = "/")
-    public ResponseEntity<ExerciseDTO> register(@RequestBody ExerciseRequestDTO Exercise) {
-        return ResponseEntity.ok(exerciseService.addExercise(Exercise));
+    @RequestMapping(method = RequestMethod.POST, path = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ExerciseDTO> register(
+            @RequestParam("name") String name,
+            @RequestParam("muscleGroup") ExerciseGroup muscleGroup,
+            @RequestParam("description") String description,
+            @RequestPart(value = "file") MultipartFile file
+    ) {
+        ExerciseRequestDTO exerciseRequest = new ExerciseRequestDTO();
+        exerciseRequest.setName(name);
+        exerciseRequest.setDescription(description);
+        exerciseRequest.setMuscleGroup(muscleGroup);
+        exerciseRequest.setImage(file);
+
+        try {
+            ExerciseDTO exerciseDTO = exerciseService.addExercise(exerciseRequest);
+            return ResponseEntity.ok(exerciseDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(method = RequestMethod.PUT, path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ExerciseDTO> updateExercise(@PathVariable String id,
+                                                      @RequestParam("name") String name,
+                                                      @RequestParam("muscleGroup") ExerciseGroup muscleGroup,
+                                                      @RequestParam("description") String description,
+                                                      @RequestPart(value = "file") MultipartFile file) {
+        ExerciseRequestDTO exerciseRequest = new ExerciseRequestDTO();
+        exerciseRequest.setName(name);
+        exerciseRequest.setDescription(description);
+        exerciseRequest.setMuscleGroup(muscleGroup);
+        exerciseRequest.setImage(file);
+
+        try {
+            ExerciseDTO exerciseDTO = exerciseService.updateExercise(id, exerciseRequest);
+            return ResponseEntity.ok(exerciseDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PreAuthorize("hasAnyAuthority('MEMBER', 'ADMIN')")
     @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable String id) {
         return ResponseEntity.ok(exerciseService.getExerciseById(id));
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
-    public ResponseEntity<ExerciseDTO> updateExercise(@PathVariable String id, @RequestBody ExerciseRequestDTO Exercise) {
-        return ResponseEntity.ok(exerciseService.updateExercise(id, Exercise));
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

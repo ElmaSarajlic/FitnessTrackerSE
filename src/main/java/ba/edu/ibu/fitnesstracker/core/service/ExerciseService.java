@@ -1,12 +1,14 @@
 package ba.edu.ibu.fitnesstracker.core.service;
 
 import ba.edu.ibu.fitnesstracker.core.exceptions.repository.ResourceNotFoundException;
+import ba.edu.ibu.fitnesstracker.api.impl.external.AmazonClient;
 import ba.edu.ibu.fitnesstracker.core.model.Exercise;
 import ba.edu.ibu.fitnesstracker.core.model.enums.ExerciseGroup;
 import ba.edu.ibu.fitnesstracker.core.repository.ExerciseRepository;
 import ba.edu.ibu.fitnesstracker.rest.dto.ExerciseDTO;
 import ba.edu.ibu.fitnesstracker.rest.dto.ExerciseRequestDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +19,13 @@ import static java.util.stream.Collectors.toList;
 public class ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
+    private final NotificationService notificationService;
+    private final AmazonClient amazonClient;
 
-    public ExerciseService(ExerciseRepository exerciseRepository) {
+    public ExerciseService(ExerciseRepository exerciseRepository, NotificationService notificationService, AmazonClient amazonClient) {
         this.exerciseRepository = exerciseRepository;
+        this.notificationService = notificationService;
+        this.amazonClient = amazonClient;
     }
 
     public List<ExerciseDTO> getExercises() {
@@ -42,8 +48,20 @@ public class ExerciseService {
     }
 
     public ExerciseDTO addExercise(ExerciseRequestDTO payload) {
-        Exercise exercise = exerciseRepository.save(payload.toEntity());
-        return new ExerciseDTO(exercise);
+        Exercise exercise = payload.toEntity();
+
+        MultipartFile imageFile = payload.getImage();
+
+        try {
+            String imageUrl = amazonClient.uploadFile(imageFile);
+            exercise.setImageUrl(imageUrl);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        Exercise savedExercise = exerciseRepository.save(exercise);
+
+        return new ExerciseDTO(savedExercise);
     }
 
     public ExerciseDTO updateExercise(String id, ExerciseRequestDTO payload) {
@@ -53,9 +71,25 @@ public class ExerciseService {
             throw new ResourceNotFoundException("Exercise with the given ID does not exist.");
         }
 
-        Exercise updatedExercise = payload.toEntity();
-        updatedExercise.setId(exercise.get().getId());
-        updatedExercise = exerciseRepository.save(updatedExercise);
+        Exercise existingExercise = exercise.get();
+
+        existingExercise.setName(payload.getName());
+        existingExercise.setMuscleGroup(payload.getMuscleGroup());
+        existingExercise.setDescription(payload.getDescription());
+
+        MultipartFile newImageFile = payload.getImage();
+        if (newImageFile != null) {
+            amazonClient.deleteFileFromS3Bucket(existingExercise.getImageUrl());
+
+            try {
+                String imageUrl = amazonClient.uploadFile(newImageFile);
+                existingExercise.setImageUrl(imageUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to upload the new image to AWS S3.", e);
+            }
+        }
+
+        Exercise updatedExercise = exerciseRepository.save(existingExercise);
         return new ExerciseDTO(updatedExercise);
     }
 

@@ -8,12 +8,14 @@ public class ExerciseDTO {
     private String name;
     private ExerciseGroup muscleGroup;
     private String description;
+    private String imageUrl;
 
     public ExerciseDTO(Exercise exercise) {
         this.id = exercise.getId();
         this.name = exercise.getName();
         this.muscleGroup = exercise.getMuscleGroup();
         this.description = exercise.getDescription();
+        this.imageUrl = exercise.getImageUrl();
     }
 
     public String getId() {
@@ -46,5 +48,13 @@ public class ExerciseDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
