@@ -8,19 +8,21 @@ import java.util.List;
 public class WorkoutLogRequestDTO {
     private List<Routine.ExerciseDetail> exercises;
     private String userId;
+    private Date dateCompleted;
 
     public WorkoutLogRequestDTO() { }
 
     public WorkoutLogRequestDTO(WorkoutLog workoutLog) {
         this.exercises = workoutLog.getExercises();
         this.userId = workoutLog.getUserId();
+        this.dateCompleted = workoutLog.getDateCompleted();
     }
 
     public WorkoutLog toEntity() {
         WorkoutLog workoutLog = new WorkoutLog();
         workoutLog.setExercises(exercises);
         workoutLog.setUserId(userId);
-        workoutLog.setDateCompleted(new Date());
+        workoutLog.setDateCompleted(dateCompleted);
         return workoutLog;
     }
 
@@ -38,5 +40,13 @@ public class WorkoutLogRequestDTO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Date getDateCompleted() {
+        return dateCompleted;
+    }
+
+    public void setDateCompleted(Date dateCompleted) {
+        this.dateCompleted = dateCompleted;
     }
 }

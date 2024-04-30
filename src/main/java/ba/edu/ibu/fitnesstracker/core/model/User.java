@@ -3,11 +3,16 @@ package ba.edu.ibu.fitnesstracker.core.model;
 import ba.edu.ibu.fitnesstracker.core.model.enums.UserType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Document
-public class User {
+public class User implements UserDetails {
 
     @Id
     private String id;
@@ -17,6 +22,18 @@ public class User {
     private String email;
     private String password;
     private Date creationDate;
+
+    public User() { }
+
+    public User(String id, UserType userType, String firstName, String lastName, String email, String password, Date creationDate) {
+        this.id = id;
+        this.userType = userType;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.creationDate = creationDate;
+    }
 
     public String getId() {
         return id;
@@ -66,13 +83,44 @@ public class User {
         this.userType = userType;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(userType.name()));
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
+
 }
 
 

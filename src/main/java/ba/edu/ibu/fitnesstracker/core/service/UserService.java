@@ -1,15 +1,20 @@
 package ba.edu.ibu.fitnesstracker.core.service;
 
 import ba.edu.ibu.fitnesstracker.core.api.mailsender.MailSender;
+import ba.edu.ibu.fitnesstracker.core.model.WorkoutLog;
 import ba.edu.ibu.fitnesstracker.core.repository.UserRepository;
 import ba.edu.ibu.fitnesstracker.rest.dto.UserDTO;
 import ba.edu.ibu.fitnesstracker.rest.dto.UserRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ba.edu.ibu.fitnesstracker.core.model.User;
 import ba.edu.ibu.fitnesstracker.core.exceptions.repository.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
@@ -74,6 +79,16 @@ public class UserService {
     public String sendEmailToAllUsers(String message) {
         List<User> users = userRepository.findAll();
         return mailgunSender.send(users, message);
+    }
+
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String email) {
+                return userRepository.findByEmail(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            }
+        };
     }
 }
 

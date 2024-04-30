@@ -5,8 +5,11 @@ import ba.edu.ibu.fitnesstracker.core.model.Routine;
 import ba.edu.ibu.fitnesstracker.core.repository.RoutineRepository;
 import ba.edu.ibu.fitnesstracker.rest.dto.RoutineDTO;
 import ba.edu.ibu.fitnesstracker.rest.dto.RoutineRequestDTO;
+import ba.edu.ibu.fitnesstracker.rest.dto.WorkoutLogDTO;
+import ba.edu.ibu.fitnesstracker.rest.dto.WorkoutLogRequestDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,9 +19,11 @@ import static java.util.stream.Collectors.toList;
 public class RoutineService {
 
     private final RoutineRepository routineRepository;
+    private final WorkoutLogService workoutLogService;
 
-    public RoutineService(RoutineRepository routineRepository) {
+    public RoutineService(RoutineRepository routineRepository, WorkoutLogService workoutLogService) {
         this.routineRepository = routineRepository;
+        this.workoutLogService = workoutLogService;
     }
 
     public List<RoutineDTO> getRoutines() {
@@ -63,4 +68,109 @@ public class RoutineService {
         routine.ifPresent(routineRepository::delete);
     }
 
+    public WorkoutLogDTO markRoutineAsDone(String routineId, Date dateCompleted) {
+        RoutineDTO routine = getRoutineById(routineId);
+
+        WorkoutLogRequestDTO logRequest = new WorkoutLogRequestDTO();
+        logRequest.setExercises(routine.getExercises());
+        logRequest.setUserId(routine.getUserId());
+        logRequest.setDateCompleted(dateCompleted);
+
+        return workoutLogService.addWorkoutLog(logRequest);
+    }
+
+    public RoutineDTO addExerciseToRoutine(String routineId, Routine.ExerciseDetail exerciseDetail) {
+        Optional<Routine> routineOptional = routineRepository.findById(routineId);
+        if (routineOptional.isEmpty()) {
+            throw new ResourceNotFoundException("Routine with the given ID does not exist.");
+        }
+
+        Routine routine = routineOptional.get();
+        List<Routine.ExerciseDetail> currentExercises = routine.getExercises();
+        currentExercises.add(exerciseDetail); // append the new exercise
+        routine.setExercises(currentExercises); // set the updated list
+        Routine updatedRoutine = routineRepository.save(routine); // save the updated routine
+        return new RoutineDTO(updatedRoutine);
+    }
+
+    public List<RoutineDTO> getRoutinesByUserId(String userId) {
+        List<Routine> routines = routineRepository.findRoutinesByUserId(userId);
+        return routines.
+                stream().
+                map(RoutineDTO::new).
+                collect(toList());
+    }
+
+    public RoutineDTO updateExerciseInRoutine(String routineId, String exerciseDetailId, Routine.ExerciseDetail updatedExerciseDetail) {
+        Optional<Routine> routineOptional = routineRepository.findById(routineId);
+
+        if (routineOptional.isEmpty()) {
+            throw new ResourceNotFoundException("Routine with the given ID does not exist.");
+        }
+
+        Routine routine = routineOptional.get();
+        List<Routine.ExerciseDetail> currentExercises = routine.getExercises();
+
+        // find the index of the exercise detail with the given ID
+        int indexOfExerciseDetail = findIndexOfExerciseDetails(exerciseDetailId, currentExercises);
+
+        // update the founded exercise detail
+        currentExercises.set(indexOfExerciseDetail, updatedExerciseDetail);
+
+        routine.setExercises(currentExercises);
+        Routine updatedRoutine = routineRepository.save(routine);
+
+        return new RoutineDTO(updatedRoutine);
+    }
+
+    public RoutineDTO deleteExerciseInRoutine(String routineId, String exerciseDetailId) {
+        Optional<Routine> routineOptional = routineRepository.findById(routineId);
+
+        if (routineOptional.isEmpty()) {
+            throw new ResourceNotFoundException("Routine with the given ID does not exist.");
+        }
+
+        Routine routine = routineOptional.get();
+        List<Routine.ExerciseDetail> currentExercises = routine.getExercises();
+
+        // find the index of the exercise detail with the given ID
+        int indexOfExerciseDetail = findIndexOfExerciseDetails(exerciseDetailId, currentExercises);
+
+        // update the founded exercise detail
+        currentExercises.remove(indexOfExerciseDetail);
+
+        routine.setExercises(currentExercises);
+        Routine updatedRoutine = routineRepository.save(routine);
+
+        return new RoutineDTO(updatedRoutine);
+    }
+
+    // helper method to find the index of the exercise detail with the given ID
+    private int findIndexOfExerciseDetails(String exerciseDetailId, List<Routine.ExerciseDetail> currentExercises) {
+        int indexOfExerciseDetail = -1;
+
+        for (int i = 0; i < currentExercises.size(); i++) {
+            if (currentExercises.get(i).getDetailId().equals(exerciseDetailId)) {
+                indexOfExerciseDetail = i;
+                break;
+            }
+        }
+
+        if (indexOfExerciseDetail == -1) {
+            throw new ResourceNotFoundException("Exercise detail with the given ID not found in the routine.");
+        }
+
+        return indexOfExerciseDetail;
+    }
+
+    public List<Routine.ExerciseDetail> getExercisesInRoutine(String routineId) {
+        Optional<Routine> routineOptional = routineRepository.findById(routineId);
+
+        if (routineOptional.isEmpty()) {
+            throw new ResourceNotFoundException("Routine with the given ID does not exist.");
+        }
+
+        Routine routine = routineOptional.get();
+        return routine.getExercises();
+    }
 }

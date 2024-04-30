@@ -13,6 +13,15 @@ public class Exercise {
     private ExerciseGroup muscleGroup;
     private String description;
 
+    public Exercise() { }
+
+    public Exercise(String id, String name, ExerciseGroup muscleGroup, String description) {
+        this.id = id;
+        this.name = name;
+        this.muscleGroup = muscleGroup;
+        this.description = description;
+    }
+
     public String getId() {
         return id;
     }
