@@ -1,7 +1,6 @@
 package ba.edu.ibu.fitnesstracker.core.service;
 
 import ba.edu.ibu.fitnesstracker.core.api.mailsender.MailSender;
-import ba.edu.ibu.fitnesstracker.core.model.WorkoutLog;
 import ba.edu.ibu.fitnesstracker.core.repository.UserRepository;
 import ba.edu.ibu.fitnesstracker.rest.dto.UserDTO;
 import ba.edu.ibu.fitnesstracker.rest.dto.UserRequestDTO;
@@ -14,7 +13,6 @@ import ba.edu.ibu.fitnesstracker.core.model.User;
 import ba.edu.ibu.fitnesstracker.core.exceptions.repository.ResourceNotFoundException;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
@@ -23,9 +21,6 @@ import static java.util.stream.Collectors.toList;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    @Autowired
-    private MailSender sendgridSender;
 
     @Autowired
     private MailSender mailgunSender;
@@ -59,15 +54,24 @@ public class UserService {
     }
 
     public UserDTO updateUser(String id, UserRequestDTO payload) {
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> existingUserOpt = userRepository.findById(id);
 
-        if (user.isEmpty()) {
+        if (existingUserOpt.isEmpty()) {
             throw new ResourceNotFoundException("User with the given ID does not exist.");
         }
 
-        User updatedUser = payload.toEntity();
-        updatedUser.setId(user.get().getId());
-        updatedUser = userRepository.save(updatedUser);
+        User existingUser = existingUserOpt.get();
+
+        // update only fields that are present in the payload (in this case name)
+        if (payload.getFirstName() != null) {
+            existingUser.setFirstName(payload.getFirstName());
+        }
+        if (payload.getLastName() != null) {
+            existingUser.setLastName(payload.getLastName());
+        }
+
+        // save the updated user
+        User updatedUser = userRepository.save(existingUser);
         return new UserDTO(updatedUser);
     }
 
@@ -91,4 +95,3 @@ public class UserService {
         };
     }
 }
-

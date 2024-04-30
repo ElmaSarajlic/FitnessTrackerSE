@@ -1,44 +1,36 @@
-import './App.css'
-import AddButton from './components/AddButton'
-import DeleteButton from './components/DeleteButton'
-import EditButton from './components/EditButton'
-import ExerciseList from './components/ExerciseList'
-import ExerciseModal from './components/ExerciseModal'
-import LoginForm from './components/LoginForm'
-import MuscleGroupChart from './components/MuscleGroupChart'
-import NavBar from './components/NavBar/NavBar'
-import RoutineList from './components/RoutineList'
-import SignUpForm from './components/SignUpForm'
-import RegisterForm from './components/SignUpForm/SignUpForm'
-import UserInfo from './components/UserInfo'
-import WorkoutList from './components/WorkoutList'
-import WorkoutWeightGraph from './components/WorkoutWeightGraph'
-import { routineList, user, workoutLogsList } from './constants'
+import './App.css';
+import NavBar from './components/NavBar/NavBar';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { HomePage, LoginPage, RegisterPage, RoutineDetails, RoutinePage, UserPage, ExplorePage, ExercisePage, NotFoundPage } from './pages';
+import ProtectedRoute from './utils/ProtectedRoutes';
+import Notifications from './components/Notifications/Notifications';
 
 function App() {
+  const location = useLocation();
 
-  // dummy click handler for testing buttons
-  const handleButtonClick = () => {
-    console.log('Button clicked!');
-  };
+  // check login or register page
+  const hideNavBar = location.pathname === '/login' || location.pathname === '/register';
 
   return (
     <>
-      {/* <WorkoutWeightGraph /> */}
-      {/* <ExerciseList /> */}
-      {/* <UserInfo user={user}/> */}
-      {/* <WorkoutList workoutLogsList={workoutLogsList} /> */}
-      {/* <RoutineList /> */}
-      {/* <LoginForm /> */}
-      {/* <RegisterForm /> */}
-      {/* <MuscleGroupChart /> */}
-      <AddButton handleClick={handleButtonClick} />
-      {/* <ExerciseModal /> */}
-      <DeleteButton handleClick={handleButtonClick} />
-      <NavBar />
-      <EditButton handleClick={handleButtonClick} />
+      {!hideNavBar && <NavBar />} {/*hide navbar on login and register page*/}
+      {!hideNavBar && <Notifications />} 
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/users/:id" element={<UserPage />} />
+          <Route path="/routines/:id" element={<RoutineDetails />} />
+          <Route path="/routines" element={<RoutinePage />} />
+          <Route path="/routines/:id" element={<RoutineDetails />} />
+          <Route path="/exercises/:id" element={<ExercisePage />} />
+        </Route>
+        <Route path="/explore" element={<ExplorePage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

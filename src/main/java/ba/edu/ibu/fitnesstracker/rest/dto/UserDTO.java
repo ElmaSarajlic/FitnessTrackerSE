@@ -7,14 +7,16 @@ import java.util.Date;
 
 public class UserDTO {
     private String id;
-    private String name;
+    private String firstName;
+    private String lastName;
     private UserType userType;
     private String email;
     private Date creationDate;
 
     public UserDTO(User user) {
         this.id = user.getId();
-        this.name = user.getFirstName() + " " +user.getLastName();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
         this.userType = user.getUserType();
         this.email = user.getEmail();
         this.creationDate = user.getCreationDate();
@@ -28,12 +30,20 @@ public class UserDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public UserType getUserType() {

@@ -1,7 +1,6 @@
 package ba.edu.ibu.fitnesstracker.core.repository;
 
 import ba.edu.ibu.fitnesstracker.core.model.Exercise;
-import ba.edu.ibu.fitnesstracker.core.repository.ExerciseRepository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

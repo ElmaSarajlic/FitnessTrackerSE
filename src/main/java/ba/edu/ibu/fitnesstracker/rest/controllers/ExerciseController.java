@@ -58,7 +58,7 @@ public class ExerciseController {
                                                       @RequestParam("name") String name,
                                                       @RequestParam("muscleGroup") ExerciseGroup muscleGroup,
                                                       @RequestParam("description") String description,
-                                                      @RequestPart(value = "file") MultipartFile file) {
+                                                      @RequestPart(value = "file", required = false) MultipartFile file) {
         ExerciseRequestDTO exerciseRequest = new ExerciseRequestDTO();
         exerciseRequest.setName(name);
         exerciseRequest.setDescription(description);

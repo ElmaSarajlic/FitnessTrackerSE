@@ -8,6 +8,7 @@ import ba.edu.ibu.fitnesstracker.rest.dto.RoutineRequestDTO;
 import ba.edu.ibu.fitnesstracker.rest.dto.WorkoutLogDTO;
 import ba.edu.ibu.fitnesstracker.rest.dto.WorkoutLogRequestDTO;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
@@ -86,12 +87,14 @@ public class RoutineService {
         }
 
         Routine routine = routineOptional.get();
-        List<Routine.ExerciseDetail> currentExercises = routine.getExercises();
+        // initialize the exercises list if it's null
+        List<Routine.ExerciseDetail> currentExercises = (routine.getExercises() == null) ? new ArrayList<>() : routine.getExercises();
         currentExercises.add(exerciseDetail); // append the new exercise
         routine.setExercises(currentExercises); // set the updated list
         Routine updatedRoutine = routineRepository.save(routine); // save the updated routine
         return new RoutineDTO(updatedRoutine);
     }
+
 
     public List<RoutineDTO> getRoutinesByUserId(String userId) {
         List<Routine> routines = routineRepository.findRoutinesByUserId(userId);

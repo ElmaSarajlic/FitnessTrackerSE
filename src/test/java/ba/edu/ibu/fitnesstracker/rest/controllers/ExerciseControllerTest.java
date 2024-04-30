@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
@@ -61,8 +60,8 @@ public class ExerciseControllerTest {
         MvcResult result = mockMvc.perform(
                 MockMvcRequestBuilders
                         .get("/api/exercise/")
-                        .contentType(MediaType.APPLICATION_JSON)
-        ).andReturn();
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         String response = result.getResponse().getContentAsString();
         assertEquals(1, (Integer) JsonPath.read(response, "$.length()"));

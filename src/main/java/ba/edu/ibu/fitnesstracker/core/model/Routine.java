@@ -2,7 +2,6 @@ package ba.edu.ibu.fitnesstracker.core.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.UUID;
 
@@ -19,7 +18,8 @@ public class Routine {
     private String userId;
     private Date creationDate;
 
-    public Routine() { }
+    public Routine() {
+    }
 
     public Routine(String id, String name, List<ExerciseDetail> exercises, String userId, Date creationDate) {
         this.id = id;
@@ -70,31 +70,34 @@ public class Routine {
     }
 
     // nested static class for array of exercises in the routine and their details
-     /* {
-        "_id": "RoutineID",
-            "name": "Upper Body Routine",
-            "userId": "userID",
-            "exercises": [
-        {
-            "exerciseId": "excerciseID",
-                "weight": 50,
-                "sets": 4,
-                "reps": 8
-        },
-        {
-            "exerciseId": "excerciseID",
-                "weight": 60,
-                "sets": 3,
-                "reps": 10
-        }
-    ],
-        "creationDate": "2023-10-21T10:30:45Z"
-    } */
+    /*
+     * {
+     * "_id": "RoutineID",
+     * "name": "Upper Body Routine",
+     * "userId": "userID",
+     * "exercises": [
+     * {
+     * "exerciseId": "excerciseID",
+     * "weight": 50,
+     * "sets": 4,
+     * "reps": 8
+     * },
+     * {
+     * "exerciseId": "excerciseID",
+     * "weight": 60,
+     * "sets": 3,
+     * "reps": 10
+     * }
+     * ],
+     * "creationDate": "2023-10-21T10:30:45Z"
+     * }
+     */
 
     public static class ExerciseDetail {
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         private String detailId; // uniquely identify the exercise detail
         private String exerciseId;
+        private String exerciseName;
         private double weight;
         private int sets;
         private int reps;
@@ -150,6 +153,14 @@ public class Routine {
 
         public void setDetailId(String detailId) {
             this.detailId = detailId;
+        }
+
+        public String getExerciseName() {
+            return exerciseName;
+        }
+
+        public void setExerciseName(String exerciseName) {
+            this.exerciseName = exerciseName;
         }
     }
 }

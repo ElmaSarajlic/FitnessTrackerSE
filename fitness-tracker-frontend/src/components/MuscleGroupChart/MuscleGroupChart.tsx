@@ -1,7 +1,10 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { exerciseList, workoutLogsList } from '../../constants';
 import { WorkoutLog, Exercise } from '../../utils/types';
-import { Typography, Box, Paper } from '@mui/material';
+import { Typography, Box } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import useLogsByUser from '../../hooks/useLogsByUser';
+import { useExercises } from '../../hooks';
 
 interface ChartData {
   name: string;
@@ -9,13 +12,22 @@ interface ChartData {
 }
 
 const MuscleGroupChart = () => {
+  const userId = useSelector((state: RootState) => state.auth.userId);
+
+  if(!userId) {
+    return null;
+  }
+  
+  const { data: exerciseList } = useExercises()
+  const { data: workoutLogsList } = useLogsByUser(userId);
+
   // to hold muscle group counts
   const muscleGroupCounts: Record<string, number> = {};
 
   // for now this works by matching exercise names, will work with ids when connected to backend
-  workoutLogsList.forEach((log: WorkoutLog) => {
+  workoutLogsList?.forEach((log: WorkoutLog) => {
     log.exercises.forEach((exercise) => {
-      const muscleGroup = exerciseList.find((e: Exercise) => e.name === exercise.exerciseName)?.muscleGroup;
+      const muscleGroup = exerciseList?.find((e: Exercise) => e.name === exercise.exerciseName)?.muscleGroup;
       console.log(`Exercise: ${exercise.exerciseName}, Muscle Group: ${muscleGroup}`); // debugging
       if (muscleGroup) {
         muscleGroupCounts[muscleGroup] = (muscleGroupCounts[muscleGroup] || 0) + 1;
@@ -42,8 +54,8 @@ const MuscleGroupChart = () => {
 
   return (
     <Box sx={{ p: 2, mb: 2}}>
-      <Typography variant='h5' sx={{ mb: 1 }}>Muscle Group Distribution</Typography>
-      <ResponsiveContainer width="100%" height={400}>
+      <Typography variant='h5' color='text.secondary' sx={{ mb: 2, textAlign: 'center' }}>Muscle Group Distribution</Typography>
+      <ResponsiveContainer width="100%" height="100%" aspect={10.0/11.0}>
         <PieChart>
           <Pie
             data={data}
@@ -54,9 +66,9 @@ const MuscleGroupChart = () => {
             fill="#8884d8"
             paddingAngle={0}
             dataKey="value"
-            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+            labelLine={false}
           >
-            {data.map((entry, index) => (
+            {data.map((_entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>

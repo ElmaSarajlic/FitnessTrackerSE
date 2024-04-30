@@ -23,9 +23,11 @@ public class User implements UserDetails {
     private String password;
     private Date creationDate;
 
-    public User() { }
+    public User() {
+    }
 
-    public User(String id, UserType userType, String firstName, String lastName, String email, String password, Date creationDate) {
+    public User(String id, UserType userType, String firstName, String lastName, String email, String password,
+            Date creationDate) {
         this.id = id;
         this.userType = userType;
         this.firstName = firstName;
@@ -122,5 +124,3 @@ public class User implements UserDetails {
     }
 
 }
-
-

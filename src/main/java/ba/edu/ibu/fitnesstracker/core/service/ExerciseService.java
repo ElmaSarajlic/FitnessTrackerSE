@@ -1,5 +1,6 @@
 package ba.edu.ibu.fitnesstracker.core.service;
 
+import ba.edu.ibu.fitnesstracker.core.exceptions.repository.NotificationException;
 import ba.edu.ibu.fitnesstracker.core.exceptions.repository.ResourceNotFoundException;
 import ba.edu.ibu.fitnesstracker.api.impl.external.AmazonClient;
 import ba.edu.ibu.fitnesstracker.core.model.Exercise;
@@ -59,6 +60,12 @@ public class ExerciseService {
             throw new RuntimeException(e);
         }
 
+        try {
+            notificationService.broadcastMessage("New exercise added: " + exercise.getName());
+        } catch (Exception e) {
+            throw new NotificationException("Failed to broadcast message for new exercise", e);
+        }
+
         Exercise savedExercise = exerciseRepository.save(exercise);
 
         return new ExerciseDTO(savedExercise);
@@ -78,9 +85,7 @@ public class ExerciseService {
         existingExercise.setDescription(payload.getDescription());
 
         MultipartFile newImageFile = payload.getImage();
-        if (newImageFile != null) {
-            amazonClient.deleteFileFromS3Bucket(existingExercise.getImageUrl());
-
+        if (newImageFile != null && !newImageFile.isEmpty()) {
             try {
                 String imageUrl = amazonClient.uploadFile(newImageFile);
                 existingExercise.setImageUrl(imageUrl);
@@ -92,6 +97,7 @@ public class ExerciseService {
         Exercise updatedExercise = exerciseRepository.save(existingExercise);
         return new ExerciseDTO(updatedExercise);
     }
+
 
     public void deleteExercise(String id) {
         Optional<Exercise> exercise = exerciseRepository.findById(id);

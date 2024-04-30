@@ -1,7 +1,6 @@
 package ba.edu.ibu.fitnesstracker.rest.dto;
 
 import ba.edu.ibu.fitnesstracker.core.model.Routine;
-import ba.edu.ibu.fitnesstracker.core.model.User;
 import ba.edu.ibu.fitnesstracker.core.model.WorkoutLog;
 
 import java.util.Date;

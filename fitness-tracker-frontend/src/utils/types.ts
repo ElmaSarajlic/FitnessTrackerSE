@@ -7,7 +7,8 @@ export type Exercise = {
 }
 
 export type ExerciseDetail = {
-    id: string,
+    detailId?: string,
+    exerciseId?: string,
     exerciseName: string, 
     weight: number,
     sets: number, 
@@ -15,22 +16,31 @@ export type ExerciseDetail = {
 }
 
 export type Routine = {
-    id: string, 
+    id?: string, 
     name: string, 
-    exercises: ExerciseDetail[]
+    exercises?: ExerciseDetail[],
+    creationDate: string,
+    userId: string
 }
 
 export type User = {
     id: string, 
+    userType: string,
     firstName: string, 
     lastName: string,
     email: string,
-    password: string
+    password: string,
+    creationDate: string
 }
 
 export type WorkoutLog = {
     id: string, 
-    date: string, 
+    dateCompleted: string, 
     exercises: ExerciseDetail[],
     userId: string
+}
+
+export type Password = {
+    oldPassword: string,
+    newPassword: string
 }

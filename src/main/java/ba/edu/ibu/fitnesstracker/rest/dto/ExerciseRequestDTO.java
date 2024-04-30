@@ -4,15 +4,14 @@ import ba.edu.ibu.fitnesstracker.core.model.Exercise;
 import ba.edu.ibu.fitnesstracker.core.model.enums.ExerciseGroup;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-
 public class ExerciseRequestDTO {
     private String name;
     private ExerciseGroup muscleGroup;
     private String description;
     private MultipartFile image;
 
-    public ExerciseRequestDTO() { }
+    public ExerciseRequestDTO() {
+    }
 
     public ExerciseRequestDTO(Exercise exercise) {
         this.name = exercise.getName();

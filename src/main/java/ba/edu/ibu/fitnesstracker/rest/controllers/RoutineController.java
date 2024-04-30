@@ -60,14 +60,16 @@ public class RoutineController {
     // to transfer array of exercises from routine to workout log
     @PreAuthorize("hasAnyAuthority('MEMBER', 'ADMIN')")
     @RequestMapping(method = RequestMethod.POST, path = "/{id}/complete")
-    public ResponseEntity<WorkoutLogDTO> markRoutineAsDone(@PathVariable String id, @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX") @RequestBody Date dateCompleted) {
+    public ResponseEntity<WorkoutLogDTO> markRoutineAsDone(@PathVariable String id,
+            @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX") @RequestBody Date dateCompleted) {
         return ResponseEntity.ok(routineService.markRoutineAsDone(id, dateCompleted));
     }
 
     // to append a certain exercise to a given routine
     @PreAuthorize("hasAnyAuthority('MEMBER', 'ADMIN')")
     @RequestMapping(method = RequestMethod.POST, path = "/{id}/exercises")
-    public ResponseEntity<RoutineDTO> addExerciseToRoutine(@PathVariable String id, @RequestBody Routine.ExerciseDetail exerciseDetail) {
+    public ResponseEntity<RoutineDTO> addExerciseToRoutine(@PathVariable String id,
+            @RequestBody Routine.ExerciseDetail exerciseDetail) {
         return ResponseEntity.ok(routineService.addExerciseToRoutine(id, exerciseDetail));
     }
 
@@ -81,14 +83,17 @@ public class RoutineController {
     // to update specific exercise detail inside a routine
     @PreAuthorize("hasAnyAuthority('MEMBER', 'ADMIN')")
     @RequestMapping(method = RequestMethod.PUT, path = "/{routineId}/exercises/{exerciseDetailId}")
-    public ResponseEntity<RoutineDTO> updateExerciseInRoutine(@PathVariable String routineId, @PathVariable String exerciseDetailId,  @RequestBody Routine.ExerciseDetail updatedExerciseDetail) {
-        return ResponseEntity.ok(routineService.updateExerciseInRoutine(routineId, exerciseDetailId, updatedExerciseDetail));
+    public ResponseEntity<RoutineDTO> updateExerciseInRoutine(@PathVariable String routineId,
+            @PathVariable String exerciseDetailId, @RequestBody Routine.ExerciseDetail updatedExerciseDetail) {
+        return ResponseEntity
+                .ok(routineService.updateExerciseInRoutine(routineId, exerciseDetailId, updatedExerciseDetail));
     }
 
     // to delete a specific exercise detail inside a routine
     @PreAuthorize("hasAnyAuthority('MEMBER', 'ADMIN')")
     @RequestMapping(method = RequestMethod.DELETE, path = "/{routineId}/exercises/{exerciseDetailId}")
-    public ResponseEntity<RoutineDTO> deleteExerciseInRoutine(@PathVariable String routineId, @PathVariable String exerciseDetailId) {
+    public ResponseEntity<RoutineDTO> deleteExerciseInRoutine(@PathVariable String routineId,
+            @PathVariable String exerciseDetailId) {
         return ResponseEntity.ok(routineService.deleteExerciseInRoutine(routineId, exerciseDetailId));
     }
 

@@ -1,8 +1,7 @@
 import { IconButton, SxProps } from "@mui/material";
 import { MouseEvent } from "react";
-import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
-type Props = {}
 
 type DeleteButtonProps = {
     color?: "inherit" | "primary" | "secondary" | "action" | "error" | "disabled" | "success";
@@ -14,7 +13,7 @@ type DeleteButtonProps = {
 const DeleteButton = ({ color = "error", size, handleClick, sx }: DeleteButtonProps) => {
     return (
         <IconButton aria-label="Delete" size={size} onClick={handleClick}>
-            <RemoveCircleOutlineOutlinedIcon color={color} sx={{ ...sx }} />
+            <RemoveCircleIcon color={color} sx={{ ...sx }} />
         </IconButton>
     )
 }

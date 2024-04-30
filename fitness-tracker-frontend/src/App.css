@@ -1,7 +1,8 @@
 #root {
-  margin: 0 auto;
+  margin: 0 auto; 
   padding: 0;
   text-align: center;
+  width: 100%;
 }
 
 * { 
@@ -9,7 +10,7 @@
   padding: 0;
 }
 
-/* additional style to make the AppBar takes full width */
-.MuiAppBar-root {
-  width: 100%;
+body {
+  background-color: rgb(233, 237, 240);
+  overflow-x: hidden;
 }
