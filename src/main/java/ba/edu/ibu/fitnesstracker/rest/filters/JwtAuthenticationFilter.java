@@ -3,6 +3,7 @@ package ba.edu.ibu.fitnesstracker.rest.filters;
 import ba.edu.ibu.fitnesstracker.core.service.JwtService;
 import ba.edu.ibu.fitnesstracker.core.service.UserService;
 import com.mongodb.lang.NonNull;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,29 +32,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
-            throws ServletException, IOException, ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
-        if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) {
+            throws ServletException, IOException {
+        try {
+            final String authHeader = request.getHeader("Authorization");
+            final String jwt;
+            final String userEmail;
+            if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            jwt = authHeader.substring(7);
+            userEmail = jwtService.extractUserName(jwt);
+            if (StringUtils.isNotEmpty(userEmail)
+                    && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userService.userDetailsService()
+                        .loadUserByUsername(userEmail);
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    SecurityContext context = SecurityContextHolder.createEmptyContext();
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    context.setAuthentication(authToken);
+                    SecurityContextHolder.setContext(context);
+                }
+            }
             filterChain.doFilter(request, response);
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"JWT expired\"}");
             return;
         }
-        jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUserName(jwt);
-        if (StringUtils.isNotEmpty(userEmail)
-                && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.userDetailsService()
-                    .loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                context.setAuthentication(authToken);
-                SecurityContextHolder.setContext(context);
-            }
-        }
-        filterChain.doFilter(request, response);
     }
 }

@@ -1,11 +1,13 @@
 package ba.edu.ibu.fitnesstracker.core.model;
 
+import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 import java.util.Date;
 
+@Builder
 @Document
 public class WorkoutLog {
 
@@ -17,6 +19,16 @@ public class WorkoutLog {
     private List<Routine.ExerciseDetail> exercises;
 
     private String userId;
+
+    public WorkoutLog() {
+    }
+
+    public WorkoutLog(String id, Date dateCompleted, List<Routine.ExerciseDetail> exercises, String userId) {
+        this.id = id;
+        this.dateCompleted = dateCompleted;
+        this.exercises = exercises;
+        this.userId = userId;
+    }
 
     public String getId() {
         return id;

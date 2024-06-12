@@ -1,8 +1,10 @@
 package ba.edu.ibu.fitnesstracker.rest.controllers;
 
+import ba.edu.ibu.fitnesstracker.core.model.Routine;
 import ba.edu.ibu.fitnesstracker.core.service.AuthService;
 import ba.edu.ibu.fitnesstracker.core.service.UserService;
 import ba.edu.ibu.fitnesstracker.rest.dto.PasswordRequestDTO;
+import ba.edu.ibu.fitnesstracker.rest.dto.RoutineDTO;
 import ba.edu.ibu.fitnesstracker.rest.dto.UserDTO;
 import ba.edu.ibu.fitnesstracker.rest.dto.UserRequestDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -72,5 +74,25 @@ public class UserController {
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MEMBER')")
+    @RequestMapping(method = RequestMethod.GET, path="/{id}/favorite-routines")
+    public ResponseEntity<List<RoutineDTO>> getFavoriteRoutines(@PathVariable String id) {
+        return ResponseEntity.ok(userService.getFavoriteRoutines(id));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MEMBER')")
+    @RequestMapping(method = RequestMethod.PUT, path="/{userId}/add-favorite/{routineId}")
+    public ResponseEntity<Void> addRoutineToFavorites(@PathVariable String userId, @PathVariable String routineId) {
+        userService.addRoutineToFavorites(userId, routineId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MEMBER')")
+    @RequestMapping(method = RequestMethod.PUT, path="/{userId}/remove-favorite/{routineId}")
+    public ResponseEntity<Void> removeRoutineFromFavorites(@PathVariable String userId, @PathVariable String routineId) {
+        userService.removeRoutineFromFavorites(userId, routineId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

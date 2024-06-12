@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux'
 import { NavLink, Outlet } from 'react-router-dom'
-import { RootState } from '../store'
+
 import { Box, Typography } from '@mui/material'
 
+import { RootState } from 'src/store'
 
 const ProtectedRoute = () => {
    const { userToken } = useSelector((state: RootState) => state.auth)

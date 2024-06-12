@@ -2,9 +2,11 @@ package ba.edu.ibu.fitnesstracker.rest.dto;
 
 import ba.edu.ibu.fitnesstracker.core.model.User;
 import ba.edu.ibu.fitnesstracker.core.model.enums.UserType;
+import lombok.Builder;
 
 import java.util.Date;
 
+@Builder
 public class UserRequestDTO {
     private UserType userType;
     private String firstName;
@@ -12,7 +14,15 @@ public class UserRequestDTO {
     private String email;
     private String password;
 
-    public  UserRequestDTO() { }
+    public UserRequestDTO() { }
+
+    public UserRequestDTO(UserType userType, String firstName, String lastName, String email, String password) {
+        this.userType = userType;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
 
     public UserRequestDTO(User user) {
         this.userType = user.getUserType();
@@ -23,14 +33,14 @@ public class UserRequestDTO {
     }
 
     public User toEntity() {
-        User user = new User();
-        user.setUserType(userType);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setCreationDate(new Date());
-        return user;
+        return User.builder()
+                .userType(userType)
+                .firstName(firstName)
+                .lastName(lastName)
+                .email(email)
+                .password(password)
+                .creationDate(new Date())
+                .build();
     }
 
     public UserType getUserType() {

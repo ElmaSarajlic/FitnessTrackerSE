@@ -1,8 +1,11 @@
 package ba.edu.ibu.fitnesstracker.rest.dto;
 
 import ba.edu.ibu.fitnesstracker.core.model.Exercise;
+import ba.edu.ibu.fitnesstracker.core.model.Routine;
 import ba.edu.ibu.fitnesstracker.core.model.enums.ExerciseGroup;
+import lombok.Builder;
 
+@Builder
 public class ExerciseDTO {
     private String id;
     private String name;
@@ -16,6 +19,17 @@ public class ExerciseDTO {
         this.muscleGroup = exercise.getMuscleGroup();
         this.description = exercise.getDescription();
         this.imageUrl = exercise.getImageUrl();
+    }
+
+    public ExerciseDTO() {
+    }
+
+    public ExerciseDTO(String id, String name, ExerciseGroup muscleGroup, String description, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.muscleGroup = muscleGroup;
+        this.description = description;
+        this.imageUrl = imageUrl;
     }
 
     public String getId() {

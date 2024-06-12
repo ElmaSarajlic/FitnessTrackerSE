@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface RoutineRepository extends MongoRepository<Routine, String> {
     List<Routine> findRoutinesByUserId(String userId);
+    List<Routine> findByIsPrivateFalse();
 }

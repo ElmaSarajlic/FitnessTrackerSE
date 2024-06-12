@@ -20,7 +20,8 @@ export type Routine = {
     name: string, 
     exercises?: ExerciseDetail[],
     creationDate: string,
-    userId: string
+    userId: string,
+    isPrivate: boolean
 }
 
 export type User = {

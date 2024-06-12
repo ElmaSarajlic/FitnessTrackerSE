@@ -1,13 +1,14 @@
 package ba.edu.ibu.fitnesstracker.core.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.UUID;
 
 import java.util.Date;
 import java.util.List;
-
+@Builder
 @Document
 public class Routine {
 
@@ -18,15 +19,21 @@ public class Routine {
     private String userId;
     private Date creationDate;
 
+    private Boolean isPrivate;
+
+    private int likes;
+
     public Routine() {
     }
 
-    public Routine(String id, String name, List<ExerciseDetail> exercises, String userId, Date creationDate) {
+    public Routine(String id, String name, List<ExerciseDetail> exercises, String userId, Date creationDate, Boolean isPrivate, int likes) {
         this.id = id;
         this.name = name;
         this.exercises = exercises;
         this.userId = userId;
         this.creationDate = creationDate;
+        this.isPrivate = isPrivate;
+        this.likes = likes;
     }
 
     public String getId() {
@@ -69,6 +76,22 @@ public class Routine {
         this.userId = userId;
     }
 
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
     // nested static class for array of exercises in the routine and their details
     /*
      * {
@@ -93,6 +116,7 @@ public class Routine {
      * }
      */
 
+    @Builder
     public static class ExerciseDetail {
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         private String detailId; // uniquely identify the exercise detail
@@ -101,6 +125,15 @@ public class Routine {
         private double weight;
         private int sets;
         private int reps;
+
+        public ExerciseDetail(String detailId, String exerciseId, String exerciseName, double weight, int sets, int reps) {
+            this.detailId = detailId;
+            this.exerciseId = exerciseId;
+            this.exerciseName = exerciseName;
+            this.weight = weight;
+            this.sets = sets;
+            this.reps = reps;
+        }
 
         // ??
         public ExerciseDetail() {

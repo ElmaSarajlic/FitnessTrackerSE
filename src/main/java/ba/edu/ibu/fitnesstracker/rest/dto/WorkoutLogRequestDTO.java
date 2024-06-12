@@ -2,9 +2,12 @@ package ba.edu.ibu.fitnesstracker.rest.dto;
 
 import ba.edu.ibu.fitnesstracker.core.model.Routine;
 import ba.edu.ibu.fitnesstracker.core.model.WorkoutLog;
+import lombok.Builder;
+
 import java.util.Date;
 import java.util.List;
 
+@Builder
 public class WorkoutLogRequestDTO {
     private List<Routine.ExerciseDetail> exercises;
     private String userId;
@@ -19,11 +22,17 @@ public class WorkoutLogRequestDTO {
     }
 
     public WorkoutLog toEntity() {
-        WorkoutLog workoutLog = new WorkoutLog();
-        workoutLog.setExercises(exercises);
-        workoutLog.setUserId(userId);
-        workoutLog.setDateCompleted(dateCompleted);
-        return workoutLog;
+        return WorkoutLog.builder()
+                .exercises(exercises)
+                .userId(userId)
+                .dateCompleted(dateCompleted)
+                .build();
+    }
+
+    public WorkoutLogRequestDTO(List<Routine.ExerciseDetail> exercises, String userId, Date dateCompleted) {
+        this.exercises = exercises;
+        this.userId = userId;
+        this.dateCompleted = dateCompleted;
     }
 
     public List<Routine.ExerciseDetail> getExercises() {
