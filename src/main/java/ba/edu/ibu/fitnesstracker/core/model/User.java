@@ -1,6 +1,7 @@
 package ba.edu.ibu.fitnesstracker.core.model;
 
 import ba.edu.ibu.fitnesstracker.core.model.enums.UserType;
+import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+@Builder
 @Document
 public class User implements UserDetails {
 

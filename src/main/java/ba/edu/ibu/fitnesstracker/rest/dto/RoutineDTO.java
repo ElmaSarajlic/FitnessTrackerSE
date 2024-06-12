@@ -1,10 +1,12 @@
 package ba.edu.ibu.fitnesstracker.rest.dto;
 
 import ba.edu.ibu.fitnesstracker.core.model.Routine;
+import lombok.Builder;
 
 import java.util.Date;
 import java.util.List;
 
+@Builder
 public class RoutineDTO {
     private String id;
     private String name;
@@ -22,6 +24,19 @@ public class RoutineDTO {
         this.userId = routine.getUserId();
         this.isPrivate = routine.getIsPrivate();
         this.likes = routine.getLikes();
+    }
+
+    public RoutineDTO() {
+    }
+
+    public RoutineDTO(String id, String name, List<Routine.ExerciseDetail> exercises, Date creationDate, String userId, Boolean isPrivate, int likes) {
+        this.id = id;
+        this.name = name;
+        this.exercises = exercises;
+        this.creationDate = creationDate;
+        this.userId = userId;
+        this.isPrivate = isPrivate;
+        this.likes = likes;
     }
 
     public String getId() {

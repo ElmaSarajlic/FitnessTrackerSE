@@ -49,13 +49,16 @@ public class ExerciseService {
     }
 
     public ExerciseDTO addExercise(ExerciseRequestDTO payload) {
-        Exercise exercise = payload.toEntity();
+        Exercise exercise = Exercise.builder()
+                .name(payload.getName())
+                .muscleGroup(payload.getMuscleGroup())
+                .description(payload.getDescription())
+                .build();
 
         MultipartFile imageFile = payload.getImage();
-
         try {
             String imageUrl = amazonClient.uploadFile(imageFile);
-            exercise.setImageUrl(imageUrl);
+            exercise.setImageUrl(imageUrl);  // set the URL after building the basic object
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -67,9 +70,9 @@ public class ExerciseService {
         }
 
         Exercise savedExercise = exerciseRepository.save(exercise);
-
         return new ExerciseDTO(savedExercise);
     }
+
 
     public ExerciseDTO updateExercise(String id, ExerciseRequestDTO payload) {
         Optional<Exercise> exercise = exerciseRepository.findById(id);

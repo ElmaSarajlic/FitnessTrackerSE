@@ -1,5 +1,8 @@
 package ba.edu.ibu.fitnesstracker.rest.dto;
 
+import lombok.Builder;
+
+@Builder
 public class LoginRequestDTO {
     private String email;
     private String password;
@@ -7,6 +10,9 @@ public class LoginRequestDTO {
     public LoginRequestDTO(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public LoginRequestDTO() {
     }
 
     public String getEmail() {

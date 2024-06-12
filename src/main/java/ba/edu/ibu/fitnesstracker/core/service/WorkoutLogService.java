@@ -45,14 +45,19 @@ public class WorkoutLogService {
     }
 
     public WorkoutLogDTO updateWorkoutLog(String id, WorkoutLogRequestDTO payload) {
-        Optional<WorkoutLog> workoutLog = workoutLogRepository.findById(id);
+        Optional<WorkoutLog> existingWorkoutLog = workoutLogRepository.findById(id);
 
-        if (workoutLog.isEmpty()) {
+        if (existingWorkoutLog.isEmpty()) {
             throw new ResourceNotFoundException("Workout Log with the given ID does not exist.");
         }
 
-        WorkoutLog updatedWorkoutLog = payload.toEntity();
-        updatedWorkoutLog.setId(workoutLog.get().getId());
+        WorkoutLog updatedWorkoutLog = WorkoutLog.builder()
+                .id(existingWorkoutLog.get().getId())
+                .userId(payload.getUserId())
+                .dateCompleted(payload.getDateCompleted())
+                .exercises(payload.getExercises())
+                .build();
+
         updatedWorkoutLog = workoutLogRepository.save(updatedWorkoutLog);
         return new WorkoutLogDTO(updatedWorkoutLog);
     }

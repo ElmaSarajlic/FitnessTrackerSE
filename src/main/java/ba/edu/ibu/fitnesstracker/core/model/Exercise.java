@@ -1,9 +1,11 @@
 package ba.edu.ibu.fitnesstracker.core.model;
 
 import ba.edu.ibu.fitnesstracker.core.model.enums.ExerciseGroup;
+import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Builder
 @Document
 public class Exercise {
 

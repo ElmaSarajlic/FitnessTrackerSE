@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -52,15 +53,24 @@ public class RoutineService {
     }
 
     public RoutineDTO updateRoutine(String id, RoutineRequestDTO payload) {
-        Optional<Routine> routine = routineRepository.findById(id);
+        Optional<Routine> routineOptional = routineRepository.findById(id);
 
-        if (routine.isEmpty()) {
+        if (routineOptional.isEmpty()) {
             throw new ResourceNotFoundException("Routine with the given ID does not exist.");
         }
 
-        Routine updatedRoutine = payload.toEntity();
-        updatedRoutine.setId(routine.get().getId());
-        updatedRoutine = routineRepository.save(updatedRoutine);
+        Routine routine = routineOptional.get();
+        List<Routine.ExerciseDetail> updatedExercises = payload.getExercises().stream()
+                .map(dto -> Routine.ExerciseDetail.builder()
+                        .exerciseName(dto.getExerciseName())
+                        .weight(dto.getWeight())
+                        .sets(dto.getSets())
+                        .reps(dto.getReps())
+                        .build())
+                .collect(Collectors.toList());
+
+        routine.setExercises(updatedExercises);
+        Routine updatedRoutine = routineRepository.save(routine);
         return new RoutineDTO(updatedRoutine);
     }
 
@@ -87,7 +97,6 @@ public class RoutineService {
         }
 
         Routine routine = routineOptional.get();
-        // initialize the exercises list if it's null
         List<Routine.ExerciseDetail> currentExercises = (routine.getExercises() == null) ? new ArrayList<>() : routine.getExercises();
         currentExercises.add(exerciseDetail); // append the new exercise
         routine.setExercises(currentExercises); // set the updated list

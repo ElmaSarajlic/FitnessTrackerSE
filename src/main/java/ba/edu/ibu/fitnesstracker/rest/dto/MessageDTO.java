@@ -1,5 +1,8 @@
 package ba.edu.ibu.fitnesstracker.rest.dto;
 
+import lombok.Builder;
+
+@Builder
 public class MessageDTO {
     private String message;
 

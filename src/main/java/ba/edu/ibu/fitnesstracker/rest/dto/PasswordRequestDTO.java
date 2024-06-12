@@ -1,5 +1,8 @@
 package ba.edu.ibu.fitnesstracker.rest.dto;
 
+import lombok.Builder;
+
+@Builder
 public class PasswordRequestDTO {
     private String oldPassword;
     private String newPassword;
@@ -14,6 +17,14 @@ public class PasswordRequestDTO {
 
     public String getNewPassword() {
         return newPassword;
+    }
+
+    public PasswordRequestDTO(String oldPassword, String newPassword) {
+        this.oldPassword = oldPassword;
+        this.newPassword = newPassword;
+    }
+
+    public PasswordRequestDTO() {
     }
 
     public void setNewPassword(String newPassword) {
