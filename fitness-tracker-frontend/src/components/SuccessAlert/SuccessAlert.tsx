@@ -1,52 +1,56 @@
-import { Box, IconButton } from '@mui/material';
-import Alert from '@mui/material/Alert';
-import CloseIcon from '@mui/icons-material/Close'; // Import the close icon
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { Box, IconButton, Fade } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import CloseIcon from "@mui/icons-material/Close";
 
 type Props = {
   message: string;
+  alertKey: string;
 };
 
-const SuccessAlert = ({ message }: Props) => {
-  const [open, setOpen] = useState(true);
+const SuccessAlert = ({ message, alertKey }: Props) => {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(true);
+
+    const timeoutId = setTimeout(() => {
+      setOpen(false);
+    }, 5000);
+
+    return () => clearTimeout(timeoutId);
+  }, [alertKey]);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   return (
-    <Box sx={{ }}>
-      {open && (
+    <Box sx={{ position: "absolute", top: 20, right: 20, zIndex: 5 }}>
+      <Fade in={open}>
         <Alert
-          severity="success"
-          variant="filled"
+          severity='success'
+          variant='filled'
+          action={
+            <IconButton
+              aria-label='close'
+              color='inherit'
+              size='small'
+              onClick={handleClose}
+            >
+              <CloseIcon fontSize='inherit' />
+            </IconButton>
+          }
           sx={{
-            width: '300px',
-            position: 'absolute',
-            top: '50px',
-            right: '50px',
-            fontSize: '18px',
-            display: 'flex',
-            alignItems: 'center',
-            zIndex: 5,
+            width: "300px",
+            fontSize: "18px",
+            display: "flex",
+            alignItems: "center",
           }}
         >
           {message}
-          <IconButton
-            color="inherit"
-            size="small"
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-            }}
-          >
-            <CloseIcon fontSize="inherit" />
-          </IconButton>
         </Alert>
-      )}
+      </Fade>
     </Box>
   );
 };

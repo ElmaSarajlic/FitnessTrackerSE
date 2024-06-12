@@ -14,3 +14,11 @@ body {
   background-color: rgb(233, 237, 240);
   overflow-x: hidden;
 }
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+}

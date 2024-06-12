@@ -22,12 +22,13 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private Date creationDate;
+    private List<Routine> favoriteRoutines;
 
     public User() {
     }
 
     public User(String id, UserType userType, String firstName, String lastName, String email, String password,
-            Date creationDate) {
+            Date creationDate, List<Routine> favouriteRoutines) {
         this.id = id;
         this.userType = userType;
         this.firstName = firstName;
@@ -35,6 +36,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.creationDate = creationDate;
+        this.favoriteRoutines = favouriteRoutines;
     }
 
     public String getId() {
@@ -83,6 +85,14 @@ public class User implements UserDetails {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public List<Routine> getFavoriteRoutines() {
+        return favoriteRoutines;
+    }
+
+    public void setFavoriteRoutines(List<Routine> favoriteRoutines) {
+        this.favoriteRoutines = favoriteRoutines;
     }
 
     @Override

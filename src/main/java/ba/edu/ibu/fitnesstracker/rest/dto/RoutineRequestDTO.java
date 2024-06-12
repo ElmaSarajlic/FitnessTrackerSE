@@ -10,12 +10,15 @@ public class RoutineRequestDTO {
     private List<Routine.ExerciseDetail> exercises;
     private String userId;
 
+    private Boolean isPrivate;
+
     public RoutineRequestDTO() { }
 
     public RoutineRequestDTO(Routine routine) {
         this.name = routine.getName();
         this.exercises = routine.getExercises();
         this.userId = routine.getUserId();
+        this.isPrivate = routine.getIsPrivate();
     }
 
     public Routine toEntity() {
@@ -24,6 +27,7 @@ public class RoutineRequestDTO {
         routine.setExercises(exercises);
         routine.setUserId(userId);
         routine.setCreationDate(new Date());
+        routine.setIsPrivate(isPrivate);
         return routine;
     }
 
@@ -49,5 +53,13 @@ public class RoutineRequestDTO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean aPrivate) {
+        isPrivate = aPrivate;
     }
 }

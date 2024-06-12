@@ -1,9 +1,11 @@
 package ba.edu.ibu.fitnesstracker.rest.dto;
 
+import ba.edu.ibu.fitnesstracker.core.model.Routine;
 import ba.edu.ibu.fitnesstracker.core.model.User;
 import ba.edu.ibu.fitnesstracker.core.model.enums.UserType;
 
 import java.util.Date;
+import java.util.List;
 
 public class UserDTO {
     private String id;
@@ -12,6 +14,7 @@ public class UserDTO {
     private UserType userType;
     private String email;
     private Date creationDate;
+    private List<Routine> favoriteRoutines;
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -20,6 +23,7 @@ public class UserDTO {
         this.userType = user.getUserType();
         this.email = user.getEmail();
         this.creationDate = user.getCreationDate();
+        this.favoriteRoutines = user.getFavoriteRoutines();
     }
 
     public String getId() {
@@ -68,5 +72,13 @@ public class UserDTO {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public List<Routine> getFavoriteRoutines() {
+        return favoriteRoutines;
+    }
+
+    public void setFavoriteRoutines(List<Routine> favoriteRoutines) {
+        this.favoriteRoutines = favoriteRoutines;
     }
 }

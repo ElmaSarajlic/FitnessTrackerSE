@@ -69,12 +69,12 @@ public class RoutineService {
         routine.ifPresent(routineRepository::delete);
     }
 
-    public WorkoutLogDTO markRoutineAsDone(String routineId, Date dateCompleted) {
+    public WorkoutLogDTO markRoutineAsDone(String routineId, Date dateCompleted, String userId) {
         RoutineDTO routine = getRoutineById(routineId);
 
         WorkoutLogRequestDTO logRequest = new WorkoutLogRequestDTO();
         logRequest.setExercises(routine.getExercises());
-        logRequest.setUserId(routine.getUserId());
+        logRequest.setUserId(userId);
         logRequest.setDateCompleted(dateCompleted);
 
         return workoutLogService.addWorkoutLog(logRequest);
@@ -175,5 +175,14 @@ public class RoutineService {
 
         Routine routine = routineOptional.get();
         return routine.getExercises();
+    }
+
+    public List<RoutineDTO> getPublicRoutines() {
+        List<Routine> routines = routineRepository.findByIsPrivateFalse();
+
+        return routines
+                .stream()
+                .map(RoutineDTO::new)
+                .collect(toList());
     }
 }

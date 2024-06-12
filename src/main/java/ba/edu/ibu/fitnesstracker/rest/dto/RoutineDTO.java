@@ -11,6 +11,8 @@ public class RoutineDTO {
     private List<Routine.ExerciseDetail> exercises;
     private Date creationDate;
     private String userId;
+    private Boolean isPrivate;
+    private int likes;
 
     public RoutineDTO(Routine routine) {
         this.id = routine.getId();
@@ -18,6 +20,8 @@ public class RoutineDTO {
         this.exercises = routine.getExercises();
         this.creationDate = routine.getCreationDate();
         this.userId = routine.getUserId();
+        this.isPrivate = routine.getIsPrivate();
+        this.likes = routine.getLikes();
     }
 
     public String getId() {
@@ -58,5 +62,21 @@ public class RoutineDTO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 }

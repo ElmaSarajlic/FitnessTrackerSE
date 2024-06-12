@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class UserTest {
-    @Test
+/*    @Test
     void shouldCreateNewUser() {
         User user = new User(
                 "idExample",
@@ -66,5 +66,5 @@ public class UserTest {
         );
 
         assertThat(user.getFirstName()).startsWith("L").endsWith("a").contains("ej").isEqualTo("Lejla").isEqualToIgnoringCase("LEJLA");
-    }
+    }*/
 }

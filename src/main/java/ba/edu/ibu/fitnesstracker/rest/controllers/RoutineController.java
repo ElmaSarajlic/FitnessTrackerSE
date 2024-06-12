@@ -59,10 +59,10 @@ public class RoutineController {
 
     // to transfer array of exercises from routine to workout log
     @PreAuthorize("hasAnyAuthority('MEMBER', 'ADMIN')")
-    @RequestMapping(method = RequestMethod.POST, path = "/{id}/complete")
+    @RequestMapping(method = RequestMethod.POST, path = "/{id}/complete/{userId}")
     public ResponseEntity<WorkoutLogDTO> markRoutineAsDone(@PathVariable String id,
-            @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX") @RequestBody Date dateCompleted) {
-        return ResponseEntity.ok(routineService.markRoutineAsDone(id, dateCompleted));
+            @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX") @RequestBody Date dateCompleted, @PathVariable String userId) {
+        return ResponseEntity.ok(routineService.markRoutineAsDone(id, dateCompleted, userId));
     }
 
     // to append a certain exercise to a given routine
@@ -102,5 +102,13 @@ public class RoutineController {
     @RequestMapping(method = RequestMethod.GET, path = "/{routineId}/exercises")
     public ResponseEntity<List<Routine.ExerciseDetail>> getExercisesInRoutine(@PathVariable String routineId) {
         return ResponseEntity.ok(routineService.getExercisesInRoutine(routineId));
+    }
+
+    // to get a list of all public routines
+
+    @PreAuthorize("hasAnyAuthority('MEMBER', 'ADMIN')")
+    @RequestMapping(method = RequestMethod.GET, path="/public")
+    public ResponseEntity<List<RoutineDTO>> getPublicRoutines() {
+        return ResponseEntity.ok(routineService.getPublicRoutines());
     }
 }
