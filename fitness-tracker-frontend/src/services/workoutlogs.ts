@@ -1,4 +1,4 @@
-import appAxios from "./appAxios";
+import appAxios from "./AppAxios";
 import { WorkoutLog } from "src/utils/types";
 
 // get workout logs by user id

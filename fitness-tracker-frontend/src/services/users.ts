@@ -1,4 +1,4 @@
-import appAxios from "./appAxios";
+import appAxios from "./AppAxios";
 import { Password, Routine, User } from "src/utils/types";
 
 // get exercise by id

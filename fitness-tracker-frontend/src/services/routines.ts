@@ -1,4 +1,4 @@
-import appAxios from "./appAxios";
+import appAxios from "./AppAxios";
 import { ExerciseDetail, Routine } from "src/utils/types";
 
 // get routine by user id

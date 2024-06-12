@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import appAxios from "src/services/appAxios";
+import appAxios from "src/services/AppAxios.ts";
 import { RegisterFormData } from "src/pages/Register";
 import { LoginFormData } from "src/pages/Login";
 import { decodeToken } from "src/utils/jwtDecode";
