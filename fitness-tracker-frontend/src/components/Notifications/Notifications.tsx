@@ -12,7 +12,7 @@ const Notifications = () => {
       return;
     }
 
-    const socketUrl = `ws://localhost:8080/websocket?token=${token}`;
+    const socketUrl = `ws://fitnesstrackerse.onrender.com/websocket?token=${token}`;
     const socket = new WebSocket(socketUrl);
 
     socket.onopen = () => {
