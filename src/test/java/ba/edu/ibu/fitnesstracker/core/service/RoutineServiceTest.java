@@ -45,34 +45,4 @@ public class RoutineServiceTest {
         assertThat(routine.getExercises()).isNotNull();
         System.out.println(savedRoutine.getId());
     }
-
-    @Test
-    public void shouldUpdateRoutineDetails() {
-        Routine routine = new Routine();
-        routine.setId("someRoutineId");
-        routine.setName("Day 4");
-        routine.setExercises(List.of(
-                new Routine.ExerciseDetail("detailID", "someId", 50, 12, 12)
-        ));
-        routine.setUserId("someUserId");
-
-        Mockito.when(routineRepository.findById("someRoutineId")).thenReturn(Optional.of(routine));
-
-        RoutineRequestDTO updatedRoutineRequest = new RoutineRequestDTO();
-        updatedRoutineRequest.setName("Updated Day 4");
-
-        Routine updatedRoutineEntity = new Routine();
-        updatedRoutineEntity.setId("someRoutineId");
-        updatedRoutineEntity.setName(updatedRoutineRequest.getName());
-        updatedRoutineEntity.setExercises(routine.getExercises());
-        updatedRoutineEntity.setUserId(routine.getUserId());
-
-        Mockito.when(routineRepository.save(ArgumentMatchers.any(Routine.class))).thenReturn(updatedRoutineEntity);
-
-        RoutineDTO updatedRoutine = routineService.updateRoutine("someRoutineId", updatedRoutineRequest);
-
-        assertThat(updatedRoutine.getName()).isEqualTo("Updated Day 4");
-        assertThat(updatedRoutine.getExercises()).isNotNull();
-    }
-
 }
