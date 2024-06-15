@@ -60,6 +60,7 @@ const UserInfo = () => {
         <SuccessAlert
           message='Your information has been updated!'
           key={Date.now()}
+          alertKey="success-alert"
         />
       )}
 
